@@ -20,6 +20,9 @@ class App extends React.Component {
     };
   }
 
+  hideError = () => {
+    this.setState({error: {}});
+  }
 
   // this function is being passed into the City child component
   // it sets the state of haveWeSearchedYet back to false 
@@ -57,11 +60,11 @@ class App extends React.Component {
     return (
       <>
         <h1>City Explorer</h1>
-        {this.state.error.message ? <Error errorState={this.state.error} /> : ''};
+        {this.state.error.message ? <Error errorState={this.state.error} hideError={this.hideError} /> : ''};
 
         {this.state.haveWeSearchedYet ?
           (<City handleShowSearch={this.handleShowSearch} cityData={this.state.locationData} errorState={this.state.error}/>) :
-          <Search handleSearch={this.handleSearch} />}
+          <Search handleSearch={this.handleSearch} hideError={this.hideError} />}
       </>
     );
   }

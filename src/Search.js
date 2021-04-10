@@ -21,7 +21,7 @@ class Search extends React.Component {
     return (
       <form onSubmit={this.handleFormSubmitted}>
         <input type="text" placeholder="City Name" ref={this.textInput} />
-        <input type="submit" value="Explore!" />
+        <input onClick={this.props.hideError} type="submit" value="Explore!" />
       </form>
     )
   }
