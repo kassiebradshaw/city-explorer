@@ -21,6 +21,7 @@ class City extends React.Component {
           </p>
           <img src={`https://maps.locationiq.com/v3/staticmap?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&center=${this.props.cityData.lat},${this.props.cityData.lon}&zoom=12`} alt="map" />
         </Jumbotron>
+
       </>
     )
   }

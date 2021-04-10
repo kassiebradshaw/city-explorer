@@ -9,7 +9,7 @@ class Error extends React.Component {
           <h1>{`${this.props.errorState.message}: ${this.props.errorState.response.data.error}`}</h1>
           <p>Please search again.</p>
         </Jumbotron>
-      </>      
+      </>
     );
   }
 }
