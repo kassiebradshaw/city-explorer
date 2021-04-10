@@ -4,7 +4,7 @@ import React from 'react';
 class Search extends React.Component {
   constructor (props) {
     super(props);
-    
+
     // what does this line mean?
     this.textInput = React.createRef();
   }

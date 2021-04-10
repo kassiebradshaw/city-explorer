@@ -2,7 +2,9 @@ import axios from 'axios';
 import React from 'react';
 
 import City from './City.js';
+import Error from './Error.js';
 import Search from './Search.js';
+
 import './App.css';
 
 class App extends React.Component {
@@ -14,6 +16,7 @@ class App extends React.Component {
       haveWeSearchedYet: false,
       // citySearchedFor is the user's requested city, starts out empty
       citySearchedFor: '',
+      error: {},
     };
   }
 
@@ -32,14 +35,19 @@ class App extends React.Component {
   handleSearch = async(citySearchedFor) => {
     console.log('searched', citySearchedFor);
 
-    let locationResponseData = await axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${citySearchedFor}&format=json`);
-    console.log(locationResponseData);
-
-    this.setState({
-      haveWeSearchedYet: true,
-      citySearchedFor: citySearchedFor,
-      locationData: locationResponseData.data[0]
-    });
+    try {
+      let locationResponseData = await axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${citySearchedFor}&format=json`);
+      console.log(locationResponseData);
+      
+      this.setState({
+        haveWeSearchedYet: true,
+        citySearchedFor: citySearchedFor,
+        locationData: locationResponseData.data[0]
+      });
+    } catch (err) {
+      console.log(`We have an error: ${err}`);
+      this.setState({error: err});
+    }
   }
 
   // here we are rendering a heading that says "City Explorer"
@@ -49,8 +57,10 @@ class App extends React.Component {
     return (
       <>
         <h1>City Explorer</h1>
+        {this.state.error.message ? <Error errorState={this.state.error} /> : ''};
+
         {this.state.haveWeSearchedYet ?
-          <City handleShowSearch={this.handleShowSearch} cityData={this.state.locationData} /> :
+          (<City handleShowSearch={this.handleShowSearch} cityData={this.state.locationData} errorState={this.state.error}/>) :
           <Search handleSearch={this.handleSearch} />}
       </>
     );
