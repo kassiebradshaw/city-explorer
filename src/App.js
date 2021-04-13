@@ -4,6 +4,7 @@ import React from 'react';
 import City from './City.js';
 import Error from './Error.js';
 import Search from './Search.js';
+// need to import Weather from './Weather.js' but if I do it now it'll break 
 
 import './App.css';
 
