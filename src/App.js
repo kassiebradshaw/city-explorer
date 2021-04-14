@@ -4,7 +4,7 @@ import React from 'react';
 import City from './City.js';
 import Error from './Error.js';
 import Search from './Search.js';
-// need to import Weather from './Weather.js' but if I do it now it'll break 
+import Weather from './Weather.js';
 
 import './App.css';
 
@@ -18,6 +18,7 @@ class App extends React.Component {
       // citySearchedFor is the user's requested city, starts out empty
       citySearchedFor: '',
       error: {},
+      forecastData: [],
     };
   }
 
@@ -52,6 +53,15 @@ class App extends React.Component {
       console.log(`We have an error: ${err}`);
       this.setState({error: err});
     }
+
+    this.getForecastData();
+  }
+
+  getForecastData = async() => {
+    const forecastData = await axios.get('http://localhost:3002/weather')
+    this.setState({
+      forecastData: forecastData.data
+    })
   }
 
   // here we are rendering a heading that says "City Explorer"
@@ -61,11 +71,14 @@ class App extends React.Component {
     return (
       <>
         <h1>City Explorer</h1>
-        {this.state.error.message ? <Error errorState={this.state.error} hideError={this.hideError} /> : ''};
+        {this.state.error.message ? <Error errorState={this.state.error} hideError={this.hideError} /> : ''}
 
         {this.state.haveWeSearchedYet ?
-          (<City handleShowSearch={this.handleShowSearch} cityData={this.state.locationData} errorState={this.state.error}/>) :
-          <Search handleSearch={this.handleSearch} hideError={this.hideError} />}
+        <>
+          <City handleShowSearch={this.handleShowSearch} cityData={this.state.locationData} errorState={this.state.error}/>
+          <Weather forecastData={this.state.forecastData}/>
+        </>
+        : <Search handleSearch={this.handleSearch} hideError={this.hideError} />}
       </>
     );
   }
