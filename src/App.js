@@ -17,8 +17,11 @@ class App extends React.Component {
       haveWeSearchedYet: false,
       // citySearchedFor is the user's requested city, starts out empty
       citySearchedFor: '',
+      locationData: [],
       error: {},
       forecastData: [],
+      lat: '',
+      lon: '',
     };
   }
 
@@ -44,14 +47,20 @@ class App extends React.Component {
       let locationResponseData = await axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${citySearchedFor}&format=json`);
       console.log(locationResponseData);
       
-      const forecastData = await axios.get('http://localhost:3002/weather');
+      const forecastData = await axios.get(`${process.env.REACT_APP_BACKEND}/weather`, 
+      {params: {
+        forecastData: this.state.forecastData,
+        lon: this.state.lon,
+        lat: this.state.lat
+      }
+      });
       console.log('We are in forecastData', forecastData);
 
       this.setState({
         haveWeSearchedYet: true,
         citySearchedFor: citySearchedFor,
         locationData: locationResponseData.data[0],
-        forecastData: forecastData.data,
+        forecastData: forecastData.body,
       });
       // this.getForecastData();
     } catch (err) {
