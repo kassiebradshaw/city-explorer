@@ -45,6 +45,7 @@ class App extends React.Component {
       console.log(locationResponseData);
       
       const forecastData = await axios.get('http://localhost:3002/weather');
+      console.log('We are in forecastData', forecastData);
 
       this.setState({
         haveWeSearchedYet: true,

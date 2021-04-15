@@ -7,7 +7,6 @@ class Weather extends React.Component {
       <ListGroup.Item key={index}>{`${day.date}: ${day.description}`}</ListGroup.Item>
     )
     )
-    console.log('in weather js', this.props.forecastData);
     return (
       <ListGroup>
         {listItems}
