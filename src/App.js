@@ -44,24 +44,20 @@ class App extends React.Component {
       let locationResponseData = await axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${citySearchedFor}&format=json`);
       console.log(locationResponseData);
       
+      const forecastData = await axios.get('http://localhost:3002/weather');
+
       this.setState({
         haveWeSearchedYet: true,
         citySearchedFor: citySearchedFor,
-        locationData: locationResponseData.data[0]
+        locationData: locationResponseData.data[0],
+        forecastData: forecastData.data,
       });
+      // this.getForecastData();
     } catch (err) {
       console.log(`We have an error: ${err}`);
       this.setState({error: err});
     }
 
-    this.getForecastData();
-  }
-
-  getForecastData = async() => {
-    const forecastData = await axios.get('http://localhost:3002/weather')
-    this.setState({
-      forecastData: forecastData.data
-    })
   }
 
   // here we are rendering a heading that says "City Explorer"
