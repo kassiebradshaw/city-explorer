@@ -2,7 +2,6 @@ import axios from 'axios';
 import React from 'react';
 
 import City from './City.js';
-import Error from './Error.js';
 import Search from './Search.js';
 import Weather from './Weather.js';
 
@@ -17,14 +16,16 @@ class App extends React.Component {
       haveWeSearchedYet: false,
       // citySearchedFor is the user's requested city, starts out empty
       citySearchedFor: '',
-      error: {},
-      forecastData: [],
+      errorMessage: false,
+      weatherData: [],
+      lat: '',
+      lon: '',
     };
   }
 
-  hideError = () => {
-    this.setState({error: {}});
-  }
+  // hideError = () => {
+  //   this.setState({error: {}});
+  // }
 
   // this function is being passed into the City child component
   // it sets the state of haveWeSearchedYet back to false 
@@ -43,22 +44,33 @@ class App extends React.Component {
     try {
       let locationResponseData = await axios.get(`https://us1.locationiq.com/v1/search.php?key=${process.env.REACT_APP_LOCATIONIQ_KEY}&q=${citySearchedFor}&format=json`);
       console.log(locationResponseData);
-      
-      const forecastData = await axios.get(`${process.env.REACT_APP_BACKEND}/weather`);
-      console.log('We are in forecastData', forecastData);
 
       this.setState({
         haveWeSearchedYet: true,
         citySearchedFor: citySearchedFor,
         locationData: locationResponseData.data[0],
-        forecastData: forecastData.data,
+        lat: locationResponseData.data[0].lat,
+        lon: locationResponseData.data[0].lon,
       });
-      // this.getForecastData();
-    } catch (err) {
-      console.log(`We have an error: ${err}`);
-      this.setState({error: err});
+      this.forecastData();
+    } catch (error) {
+      // console.log(`We have an error: ${error.message}`);
+      console.error(error);
+      this.setState({errorMessage: error.message});
     }
 
+  }
+
+  forecastData = () => {
+    axios.get(`${process.env.REACT_APP_BACKEND}/weather`, 
+    {
+      params: {lat: this.state.lat,
+      lon: this.state.lon}
+    })
+    .then(weatherData => {
+      console.log(weatherData.data)
+      this.setState({weatherData: weatherData.data})
+    })
   }
 
   // here we are rendering a heading that says "City Explorer"
@@ -68,12 +80,14 @@ class App extends React.Component {
     return (
       <>
         <h1>City Explorer</h1>
-        {this.state.error.message ? <Error errorState={this.state.error} hideError={this.hideError} /> : ''}
+        {/* {this.state.error.message ? <Error errorState={this.state.error} hideError={this.hideError} /> : ''} */}
 
         {this.state.haveWeSearchedYet ?
         <>
-          <City handleShowSearch={this.handleShowSearch} cityData={this.state.locationData} errorState={this.state.error}/>
-          <Weather forecastData={this.state.forecastData}/>
+          <City handleShowSearch={this.handleShowSearch} cityData={this.state.locationData} 
+          // errorState={this.state.error}
+          />
+          <Weather weatherData={this.state.weatherData}/>
         </>
         : <Search handleSearch={this.handleSearch} hideError={this.hideError} />}
       </>
