@@ -52,7 +52,7 @@ class App extends React.Component {
         lat: locationResponseData.data[0].lat,
         lon: locationResponseData.data[0].lon,
       });
-      this.forecastData();
+      this.getForecastData();
     } catch (error) {
       // console.log(`We have an error: ${error.message}`);
       console.error(error);
@@ -61,8 +61,8 @@ class App extends React.Component {
 
   }
 
-  forecastData = () => {
-    axios.get(`${process.env.REACT_APP_BACKEND}/weather`, 
+  getForecastData = async() => {
+    await axios.get(`${process.env.REACT_APP_BACKEND}/weather`, 
     {
       params: {lat: this.state.lat,
       lon: this.state.lon}
