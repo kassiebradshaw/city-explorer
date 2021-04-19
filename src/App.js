@@ -61,11 +61,15 @@ class App extends React.Component {
 
   }
 
-  getForecastData = async() => {
-    await axios.get(`${process.env.REACT_APP_BACKEND}/weather`, 
+  getForecastData = () => {
+    axios.get(`${process.env.REACT_APP_BACKEND}/weather`, 
     {
       params: {lat: this.state.lat,
-      lon: this.state.lon}
+      lon: this.state.lon},
+      headers: {
+        'Access-Control-Allow-Origin' : '*',
+        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      }
     })
     .then(weatherData => {
       console.log(weatherData.data)
