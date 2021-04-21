@@ -57,8 +57,8 @@ class App extends React.Component {
     })
   }
 
-  getMovieData = async (citySearchedFor) => {
-    await axios.get(`${process.env.REACT_APP_BACKEND}/movies`,
+  getMovieData = (citySearchedFor) => {
+    axios.get(`${process.env.REACT_APP_BACKEND}/movies`,
     {
       params: {
         city: this.state.citySearchedFor
