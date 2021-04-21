@@ -61,7 +61,7 @@ class App extends React.Component {
     axios.get(`${process.env.REACT_APP_BACKEND}/movies`,
     {
       params: {
-        city: this.state.citySearchedFor
+        query: this.state.citySearchedFor
       },
     headers: {
       'Access-Control-Allow-Origin' : '*',
