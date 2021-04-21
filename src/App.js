@@ -2,6 +2,7 @@ import axios from 'axios';
 import React from 'react';
 
 import City from './City.js';
+import Movies from './Movies.js';
 import Search from './Search.js';
 import Weather from './Weather.js';
 
@@ -20,6 +21,7 @@ class App extends React.Component {
       weatherData: [],
       lat: '',
       lon: '',
+      moviesArray: [],
     };
   }
 
@@ -32,6 +34,44 @@ class App extends React.Component {
   handleShowSearch = () => {
     this.setState({haveWeSearchedYet: false});
   }
+
+  // function to request weather data from server, server to WeatherBit
+  // returns weatherData
+  // sets state of weaterData to weatherData.data
+  getForecastData = async () => {
+    await axios.get(`${process.env.REACT_APP_BACKEND}/weather`, 
+    {
+      params: 
+      {
+        lat: this.state.lat,
+        lon: this.state.lon
+      },
+      headers: {
+        'Access-Control-Allow-Origin' : '*',
+        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+      }
+    })
+    .then(weatherData => {
+      console.log(weatherData.data)
+      this.setState({weatherData: weatherData.data})
+    })
+  }
+
+  getMovieData = async (citySearchedFor) => {
+    await axios.get(`${process.env.REACT_APP_BACKEND}/movies`,
+    {
+      params: {
+        city: this.state.citySearchedFor
+      }
+    })
+    .then(response => {
+      console.log(response.data)
+      this.setState({moviesArray: response.data})
+    
+    })
+  }
+
+
 
   // this function is being passed into the Search child component
   // it console.logs "Searched" and the city that was searched for
@@ -52,29 +92,17 @@ class App extends React.Component {
         lat: locationResponseData.data[0].lat,
         lon: locationResponseData.data[0].lon,
       });
+
       this.getForecastData();
+
+      this.getMovieData(citySearchedFor);
+
     } catch (error) {
       // console.log(`We have an error: ${error.message}`);
       console.error(error);
       this.setState({errorMessage: error.message});
     }
 
-  }
-
-  getForecastData = () => {
-    axios.get(`${process.env.REACT_APP_BACKEND}/weather`, 
-    {
-      params: {lat: this.state.lat,
-      lon: this.state.lon},
-      headers: {
-        'Access-Control-Allow-Origin' : '*',
-        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-      }
-    })
-    .then(weatherData => {
-      console.log(weatherData.data)
-      this.setState({weatherData: weatherData.data})
-    })
   }
 
   // here we are rendering a heading that says "City Explorer"
@@ -92,6 +120,7 @@ class App extends React.Component {
           // errorState={this.state.error}
           />
           <Weather weatherData={this.state.weatherData}/>
+          <Movies moviesArray={this.state.moviesArray}/>
         </>
         : <Search handleSearch={this.handleSearch} hideError={this.hideError} />}
       </>
