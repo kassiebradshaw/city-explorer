@@ -62,7 +62,11 @@ class App extends React.Component {
     {
       params: {
         city: this.state.citySearchedFor
-      }
+      },
+    headers: {
+      'Access-Control-Allow-Origin' : '*',
+        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
+    }
     })
     .then(response => {
       console.log(response.data)
