@@ -46,10 +46,6 @@ class App extends React.Component {
         lat: this.state.lat,
         lon: this.state.lon
       },
-      headers: {
-        'Access-Control-Allow-Origin' : '*',
-        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-      }
     })
     .then(weatherData => {
       console.log(weatherData.data)
@@ -57,16 +53,12 @@ class App extends React.Component {
     })
   }
 
-  getMovieData = (citySearchedFor) => {
-    axios.get(`${process.env.REACT_APP_BACKEND}/movies`,
+  getMovieData = async (citySearchedFor) => {
+    await axios.get(`${process.env.REACT_APP_BACKEND}/movies`,
     {
       params: {
-        query: this.state.citySearchedFor
+        city: this.state.citySearchedFor
       },
-    headers: {
-      'Access-Control-Allow-Origin' : '*',
-        'Access-Control-Allow-Methods' : 'GET,PUT,POST,DELETE,PATCH,OPTIONS',
-    }
     })
     .then(response => {
       console.log(response.data)
