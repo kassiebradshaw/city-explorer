@@ -1,10 +1,10 @@
 import axios from 'axios';
 import React from 'react';
 
-import City from './City.js';
-import Movies from './Movies.js';
-import Search from './Search.js';
-import Weather from './Weather.js';
+import City from './Components/City.js';
+import Movies from './Components/movie/Movies.js';
+import Search from './Components/Search.js';
+import Weather from './Components/weather/Weather.js';
 
 import './App.css';
 
